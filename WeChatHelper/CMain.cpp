@@ -291,10 +291,12 @@ void CMain::OnStartWeChat()
             HANDLE hProcess = ::OpenProcess(PROCESS_TERMINATE, FALSE, dwPid);
             ::TerminateProcess(hProcess, 0);
         }
-        // 重启微信
+        // 重置状态
         this->isInjectWechat = false;
         this->isLoginWechat = FALSE;
         this->isSendWeChatNotFound = false;
+        this->getInfoCounter = 0;
+        // 重启微信
         this->Inject2WeChat();
     }
     else
@@ -509,8 +511,11 @@ void CMain::OnWxLogout()
             logout.cbData = 0;
             logout.lpData = NULL;
             pWnd->SendMessage(WM_COPYDATA, NULL, (LPARAM)&logout);
-            isLoginWechat = FALSE;
-            isInjectWechat = false;
+            // 重置状态
+            this->isInjectWechat = false;
+            this->isLoginWechat = FALSE;
+            this->isSendWeChatNotFound = false;
+            this->getInfoCounter = 0;
         }
         
         // 调用HTTP接口，发送客服微信下线
