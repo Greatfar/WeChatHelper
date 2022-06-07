@@ -124,13 +124,13 @@ BOOL CMain::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
         if (userInfo.wxid.length() <= 4)
         {
             // 仅尝试获取10次
-            if (getInfoCounter < 10)
+            if (readInfoCounter < 10)
             {
                 showLog(_T("获取微信个人信息失败，正在重试"));
                 string logContent = "获取微信个人信息失败，正在重试";
                 WriteLog(logContent.c_str());
                 this->SendGetInformation();
-                this->getInfoCounter++;
+                this->readInfoCounter++;
             }
             // 尝试10次之后，如果依然获取失败，重启助手
             else
@@ -295,7 +295,7 @@ void CMain::OnStartWeChat()
         this->isInjectWechat = false;
         this->isLoginWechat = FALSE;
         this->isSendWeChatNotFound = false;
-        this->getInfoCounter = 0;
+        this->readInfoCounter = 0;
         // 重启微信
         this->Inject2WeChat();
     }
@@ -515,7 +515,7 @@ void CMain::OnWxLogout()
             this->isInjectWechat = false;
             this->isLoginWechat = FALSE;
             this->isSendWeChatNotFound = false;
-            this->getInfoCounter = 0;
+            this->readInfoCounter = 0;
         }
         
         // 调用HTTP接口，发送客服微信下线
