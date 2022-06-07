@@ -1,0 +1,13 @@
+/.vs/
+
+/x64/
+/enc_temp_folder/
+/WeChatTools/Debug/
+/WeChatHelper/Debug/
+/WeChatTools/Release/
+/WeChatHelper/Release/
+/WeChatTools/x64/
+/WeChatHelper/x64/
+
+*.log
+*.txt

@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="注入器">
+      <UniqueIdentifier>{193408ff-e557-4e8f-a7f7-14adeb59a41c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="主窗口">
+      <UniqueIdentifier>{e972c32d-5869-46fe-b699-7294185d45db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="自定义数据">
+      <UniqueIdentifier>{30fd4e88-1105-4b17-bcd8-44367b7c946c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="自定义数据\自定义消息">
+      <UniqueIdentifier>{4c32c906-f9de-4503-be4f-b64ad0614daf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="网络请求">
+      <UniqueIdentifier>{aafdac7a-e31b-465b-bd4b-c7cea9bfac49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="公共函数">
+      <UniqueIdentifier>{069da906-b168-4c6c-bb8b-0d690ba6bdbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="自定义数据\结构体">
+      <UniqueIdentifier>{ab603aa1-5935-4fc4-af16-5720f654f8c6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CInjectTools.h">
+      <Filter>注入器</Filter>
+    </ClInclude>
+    <ClInclude Include="message.h">
+      <Filter>自定义数据\自定义消息</Filter>
+    </ClInclude>
+    <ClInclude Include="CMain.h">
+      <Filter>主窗口</Filter>
+    </ClInclude>
+    <ClInclude Include="data.h">
+      <Filter>自定义数据\结构体</Filter>
+    </ClInclude>
+    <ClInclude Include="CAboutDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WeChatHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CHttpClient.h">
+      <Filter>网络请求</Filter>
+    </ClInclude>
+    <ClInclude Include="PublicFunction.h">
+      <Filter>公共函数</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="WeChatHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CInjectTools.cpp">
+      <Filter>注入器</Filter>
+    </ClCompile>
+    <ClCompile Include="CMain.cpp">
+      <Filter>主窗口</Filter>
+    </ClCompile>
+    <ClCompile Include="CAboutDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CHttpClient.cpp">
+      <Filter>网络请求</Filter>
+    </ClCompile>
+    <ClCompile Include="PublicFunction.cpp">
+      <Filter>公共函数</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="WeChatHelper.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\WeChatHelper.rc2">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\WeChat.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
