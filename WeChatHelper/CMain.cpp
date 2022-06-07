@@ -89,22 +89,8 @@ BOOL CMain::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
     {
         string logContent = "微信登录成功，微信助手正在上报登录状态";
         WriteLog(logContent.c_str());
-
         // 向被控端发送 获取个人信息 消息
-        CWnd* pWnd = CWnd::FindWindow(NULL, L"WeChatTools");
-        if (pWnd == NULL)
-        {
-            ShowTaskInfo(_T("正在获取微信个人信息，但无法查找到被控端窗口"));
-            logContent = "正在获取微信个人信息，但无法查找到被控端窗口";
-            WriteLog(logContent.c_str());
-        }
-        else {
-            COPYDATASTRUCT GetInformation;
-            GetInformation.dwData = WM_GetInformation;
-            GetInformation.cbData = 0;
-            GetInformation.lpData = NULL;
-            pWnd->SendMessage(WM_COPYDATA, NULL, (LPARAM)&GetInformation);
-        }
+        SendGetInformation();
     }
     // 微信已经登录 消息
     else if (pCopyDataStruct->dwData == WM_AlreadyLogin)
@@ -133,6 +119,37 @@ BOOL CMain::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
         if (userInfo.wxcount.length() <= 4) userInfo.wxcount = userInfo.wxid;   // 如果没有微信号就使用微信id
         userInfo.nickname = wchar_t_to_string(personInfo->nickname);        // 微信昵称
         userInfo.phonenumber = wchar_t_to_string(personInfo->phonenumber);    // 手机号
+        
+        // 如果获取到的微信id是null，重新获取
+        if (userInfo.wxid.length() <= 4)
+        {
+            // 仅尝试获取10次
+            if (getInfoCounter < 10)
+            {
+                showLog(_T("获取微信个人信息失败，正在重试"));
+                string logContent = "获取微信个人信息失败，正在重试";
+                WriteLog(logContent.c_str());
+                this->SendGetInformation();
+                this->getInfoCounter++;
+            }
+            // 尝试10次之后，如果依然获取失败，重启助手
+            else
+            {
+                string logContent = "多次尝试获取微信个人信息失败，正在重启微信助手";
+                WriteLog(logContent.c_str());
+                // 终止微信进程
+                DWORD dwPid = ProcessNameFindPID("WeChat.exe");
+                if (dwPid != 0)
+                {
+                    HANDLE hProcess = ::OpenProcess(PROCESS_TERMINATE, FALSE, dwPid);
+                    ::TerminateProcess(hProcess, 0);
+                }
+                // 重启助手(调用CMD杀进程后启动)
+                string cmd = "taskkill /f /im WeChatHelper.exe & start " + cstring_to_string(this->GetCurrentPath()) + "WeChatHelper.exe";
+                system(cmd.c_str());
+            }
+            return CDialogEx::OnCopyData(pWnd, pCopyDataStruct);
+        }
 
         // 调用HTTP接口，发送客服微信上线
         string postParam = "o_wx_id=" + userInfo.wxid + "&wx_id="
@@ -162,6 +179,34 @@ BOOL CMain::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
     }
 
     return CDialogEx::OnCopyData(pWnd, pCopyDataStruct);
+}
+
+
+
+//************************************************************
+// 函数名称: SendGetInformation
+// 函数说明: 发送获取微信个人信息消息
+// 作    者: Greatfar
+// 时    间: 2022/06/07
+// 参    数: void
+// 返 回 值: void
+//***********************************************************
+void CMain::SendGetInformation()
+{
+    CWnd* pWnd = CWnd::FindWindow(NULL, L"WeChatTools");
+    if (pWnd == NULL)
+    {
+        ShowTaskInfo(_T("正在获取微信个人信息，但无法查找到被控端窗口"));
+        string logContent = "正在获取微信个人信息，但无法查找到被控端窗口";
+        WriteLog(logContent.c_str());
+    }
+    else {
+        COPYDATASTRUCT GetInformation;
+        GetInformation.dwData = WM_GetInformation;
+        GetInformation.cbData = 0;
+        GetInformation.lpData = NULL;
+        pWnd->SendMessage(WM_COPYDATA, NULL, (LPARAM)&GetInformation);
+    }
 }
 
 
@@ -500,6 +545,7 @@ void CMain::OnAppExit()
     {
         // 退出微信
         OnWxLogout();
+        Sleep(2000);  // 等待2秒，让微信通知服务器PC客户端下线，手机微信会把顶部登录提示移除
         // 终止微信进程
         DWORD dwPid = ProcessNameFindPID("WeChat.exe");
         if (dwPid != 0)

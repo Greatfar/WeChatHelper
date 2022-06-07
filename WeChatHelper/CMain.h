@@ -28,6 +28,7 @@ public:
     BOOL isLoginWechat = FALSE;         // 是否登录微信
     bool isSendWeChatNotFound = false;  // 微信客户端不正常退出时，是否已发送客服下线
     string baseUrl = "";                // API基础URL
+    int getInfoCounter = 0;             // 获取个人信息的次数
 
     virtual BOOL OnInitDialog();
 
@@ -50,6 +51,7 @@ public:
     void OnFriendRequestLog();
     void OnOpenHelper();
     void GetBaseUrl();
+    void SendGetInformation();
     CString GetCurrentPath();
     std::string HttpRequest(string uri, string postData = "");
     bool HandleFriendRequest(WPARAM wParam);
