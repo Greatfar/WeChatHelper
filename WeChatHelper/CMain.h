@@ -51,7 +51,7 @@ public:
     void OnOpenHelper();
     void GetBaseUrl();
     CString GetCurrentPath();
-    std::string HttpRequest(string url, string postData = "");
+    std::string HttpRequest(string uri, string postData = "");
     bool HandleFriendRequest(WPARAM wParam);
 };
 

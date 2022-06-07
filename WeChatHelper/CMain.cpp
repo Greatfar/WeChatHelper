@@ -659,12 +659,13 @@ void CMain::ShowTaskInfo(LPCTSTR tips)
 // 函数说明: 发送HTTP请求
 // 作    者: Greatfar
 // 时    间: 2022/03/20
-// 参    数: url 请求地址
+// 参    数: uri 请求的资源路径
 // 参    数: postData 请求体(不传为GET请求，传入非空字符串为POST请求)
 // 返 回 值: string 响应体
 //***********************************************************
-std::string CMain::HttpRequest(string url, string postData)
+std::string CMain::HttpRequest(string uri, string postData)
 {
+    string url = this->baseUrl + uri;
     // 默认提交的参数
     if (postData == "")
     {
@@ -678,7 +679,6 @@ std::string CMain::HttpRequest(string url, string postData)
     // 发送HTTP请求
     CHttpClient httpClient;
     string response = "";  // 响应体
-    url = this->baseUrl + url;
     bool status = httpClient.Request(url, response, postData);
     // 请求失败
     if (!status) {
