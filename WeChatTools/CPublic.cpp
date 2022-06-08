@@ -70,7 +70,7 @@ wchar_t * UTF8ToUnicode(const char* str)
 
 
 
-wstring UTF8ToUnicode2(const char* str)
+std::wstring UTF8ToUnicode2(const char* str)
 {
     int textlen = 0;
     wchar_t* result;
@@ -79,7 +79,7 @@ wstring UTF8ToUnicode2(const char* str)
     memset(result, 0, (textlen + 1) * sizeof(wchar_t));
     MultiByteToWideChar(CP_UTF8, 0, str, -1, (LPWSTR)result, textlen);
 
-    wstring tempstr(result);
+    std::wstring tempstr(result);
     free(result);
     result = NULL;
     return tempstr;

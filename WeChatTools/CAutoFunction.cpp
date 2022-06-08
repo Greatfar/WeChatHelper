@@ -6,7 +6,10 @@
 #include <iostream>
 #include <cstdio>
 #include <ctime>
+#include <string>
 
+using std::string;
+using std::wstring;
 
 
 //************************************************************

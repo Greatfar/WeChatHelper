@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include <strstream>
 #include <iostream>
+#include <string>
 #pragma comment(lib,"Version.lib")
 
-
+using std::string;
+using std::wstring;
 
 //************************************************************
 // 函数名称: getWxVersion
@@ -41,7 +43,7 @@ string getWxVersion()
                 int s_revision_num = pVsInfo->dwFileVersionLS & 0x0000FFFF;
 
                 // 把版本变成字符串
-                strstream wxVer;
+                std::strstream wxVer;
                 wxVer << s_major_ver << "." << s_minor_ver << "." << s_build_num << "." << s_revision_num;
                 wxVer >> asVer;
             }

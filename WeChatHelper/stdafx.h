@@ -37,10 +37,8 @@
 #include <atlconv.h>
 #include <memory>
 
-using namespace std;
 #include "message.h"
 #include "data.h"
-
 
 
 #include <afxcontrolbars.h>

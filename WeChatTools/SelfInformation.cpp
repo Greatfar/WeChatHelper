@@ -5,7 +5,7 @@
 
 void GetInformation()
 {
-    unique_ptr<PersonalInformation> info(new PersonalInformation);
+    std::unique_ptr<PersonalInformation> info(new PersonalInformation);
 
     DWORD dwWeChatWin = GetWeChatWinBase();
 

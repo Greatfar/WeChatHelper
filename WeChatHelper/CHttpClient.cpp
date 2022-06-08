@@ -3,6 +3,10 @@
 #include "curl/curl.h"
 #include <string>
 
+using std::string;
+using std::wstring;
+
+
 CHttpClient::CHttpClient(void) : isDebug(false)
 {
 

@@ -20,7 +20,7 @@ public:
     
 private:
     bool isDebug;              // 调试标识
-    string errorMsg = "";      // cURL请求错误提示
+    std::string errorMsg = "";      // cURL请求错误提示
     long responseCode;         // 响应状态码
 };
 

@@ -1,9 +1,7 @@
 #include "stdafx.h"
-#include <string>
 #include "ChatRecord.h"
 #include "CAutoFunction.h"
 #include <stdio.h>
-using namespace std;
 
 
 // 返回地址（执行完HOOK后跳转回来的地址）

@@ -7,6 +7,9 @@
 #include "CHttpClient.h"
 #include "PublicFunction.h"
 
+using std::string;
+using std::wstring;
+
 
 IMPLEMENT_DYNAMIC(CMain, CDialogEx)
 
@@ -471,7 +474,7 @@ void CMain::OnOpenHelper()
 void CMain::OnSumFriendRequest()
 {
     if (isLoginWechat) {
-        string logResult = "当前微信号今天收到" + to_string(friendRequestCounter) + "个好友请求";
+        string logResult = "当前微信号今天收到" + std::to_string(friendRequestCounter) + "个好友请求";
         CString csLog = CString(logResult.c_str());
         showLog(csLog);
         string logContent = "点击加粉统计菜单：" + logResult;
@@ -816,7 +819,7 @@ bool CMain::HandleFriendRequest(WPARAM wParam)
         friendScene = "搜索微信号添加";
     }
     // 显示窗口日志
-    string logResult = "第 " + to_string(friendRequestCounter) + " 个好友请求 -- "
+    string logResult = "第 " + std::to_string(friendRequestCounter) + " 个好友请求 -- "
         + friendScene + " -- " + friendWxac + " -- " + friendWxid + " -- "
         + friendNickname + " -- " + friendRemark;
     CString csLog = CString(logResult.c_str());

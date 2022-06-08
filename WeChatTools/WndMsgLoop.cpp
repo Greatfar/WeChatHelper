@@ -6,7 +6,10 @@
 #include "CAutoFunction.h"
 #include "SelfInformation.h"
 #include <stdio.h>
+#include <string>
 
+using std::string;
+using std::wstring;
 
 //************************************************************
 // º¯ÊýÃû³Æ: RegisterWindow

@@ -6,7 +6,8 @@
 #include <TlHelp32.h>
 #include <atlstr.h>
 
-using namespace std;
+using std::string;
+using std::wstring;
 
 
 //************************************************************
