@@ -2,8 +2,6 @@
 
 #include <string>
 
-using namespace std;
-
 std::string unicode_to_utf8(const std::string& str); // unicode ת utf8
 wstring utf8_to_unicode(const string& utf8_str);     // utf8 ת unicode
 std::string wchar_t_to_string(wchar_t* wchar);       // wchat_t* ת string
