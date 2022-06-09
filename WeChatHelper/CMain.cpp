@@ -596,6 +596,7 @@ void CMain::OnClose()
 void CMain::OnTimer(UINT nIDEvent)
 {
     if (!isLoginWechat) return;
+    // 查找 WeChatTools.dll 注册的窗体
     CWnd* pWnd = CWnd::FindWindow(NULL, L"WeChatTools");
     if (pWnd == NULL)
     {
@@ -604,17 +605,26 @@ void CMain::OnTimer(UINT nIDEvent)
         string logContent = "无法与微信建立联系，请使用菜单（操作--启动微信）重新登录微信";
         WriteLog(logContent.c_str());
         // 通知服务器1次，客服已下线
-        if (!isSendWeChatNotFound) {
+        if (!isSendWeChatNotFound)
+        {
             isSendWeChatNotFound = true;
             // 调用HTTP接口，发送客服微信下线
             string postParam = "o_wx_id=" + userInfo.wxid + "&wx_id="
                 + userInfo.wxcount + "&status=0&source=pc_wechat&device_number=wechat-client-not-found&wx_ic="
                 + UrlEncode(unicode_to_utf8(userInfo.nickname));
             HttpRequest("fans_user_status", postParam);
-            // 弹出重新启动微信对话框
+        }
+        // 弹出重新启动微信对话框
+        if (!isPopupWeChatNotFound)
+        {
+            isPopupWeChatNotFound = true;
             if (MessageBoxA(NULL, "微信似乎闪退了，是否重新登录微信", "tips", MB_SYSTEMMODAL | MB_YESNO) == IDYES)
             {
                 OnStartWeChat();
+            }
+            else
+            {
+                isPopupWeChatNotFound = false;
             }
         }
     }
