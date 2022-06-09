@@ -39,7 +39,7 @@ public:
     afx_msg void OnClose();
 
     void OnTimer(UINT nIDEvent);
-    void showLog(CString log);
+    void ShowLog(CString log);
     void RunInBackground();
     void ShowTaskInfo(LPCTSTR tips);
     void OnAbout();

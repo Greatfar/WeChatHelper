@@ -99,7 +99,7 @@ BOOL CMain::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
     // 微信已经登录 消息
     else if (pCopyDataStruct->dwData == WM_AlreadyLogin)
     {
-        showLog(_T("您已登录微信，请退出微信，再运行微信助手"));
+        ShowLog(_T("您已登录微信，请退出微信，再运行微信助手"));
         string logContent = "您已登录微信，请退出微信，再运行微信助手";
         WriteLog(logContent.c_str());
         MessageBoxA(NULL, "您已登录微信，请退出微信，再运行微信助手", "tips", 0);
@@ -130,11 +130,11 @@ BOOL CMain::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
             // 仅尝试获取10次
             if (readInfoCounter < 10)
             {
-                showLog(_T("获取微信个人信息失败，正在重试"));
+                this->readInfoCounter++;
+                ShowLog(_T("获取微信个人信息失败，正在重试"));
                 string logContent = "获取微信个人信息失败，正在重试";
                 WriteLog(logContent.c_str());
                 this->SendGetInformation();
-                this->readInfoCounter++;
             }
             // 尝试10次之后，如果依然获取失败，重启助手
             else
@@ -163,7 +163,7 @@ BOOL CMain::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
 
         string logResult = "微信上线：" + userInfo.nickname + " -- " + userInfo.wxcount + " -- " + userInfo.wxid;
         CString csLog = CString(logResult.c_str());
-        showLog(csLog);
+        ShowLog(csLog);
     }
     // 显示窗口 消息
     else if (pCopyDataStruct->dwData == WM_DesktopShowWindow)
@@ -216,14 +216,14 @@ void CMain::SendGetInformation()
 
 
 //************************************************************
-// 函数名称: showLog
+// 函数名称: ShowLog
 // 函数说明: 显示日志
 // 作    者: Greatfar
 // 时    间: 2022/03/23
 // 参    数: void
 // 返 回 值: void
 //***********************************************************
-void CMain::showLog(CString log)
+void CMain::ShowLog(CString log)
 {
     // 格式化时间
     time_t t = time(0);
@@ -305,7 +305,7 @@ void CMain::OnStartWeChat()
     }
     else
     {
-        showLog(_T("微信正在运行，不能重复启动"));
+        ShowLog(_T("微信正在运行，不能重复启动"));
         logContent = "微信正在运行，不能重复启动";
         WriteLog(logContent.c_str());
     }
@@ -330,7 +330,7 @@ void CMain::Inject2WeChat()
         if (InjectDll(wxPid) == FALSE)
         {
             ShowTaskInfo(_T("微信助手初始化失败"));
-            showLog(_T("微信助手初始化失败"));
+            ShowLog(_T("微信助手初始化失败"));
             string logContent = "微信助手初始化失败";
             WriteLog(logContent.c_str());
         }
@@ -340,7 +340,7 @@ void CMain::Inject2WeChat()
             // 打开已注入标识
             isInjectWechat = true;
             // 提示信息
-            showLog(_T("欢迎使用微信助手，助手初始化成功"));
+            ShowLog(_T("欢迎使用微信助手，助手初始化成功"));
             string logContent = "欢迎使用微信助手，助手初始化成功";
             WriteLog(logContent.c_str());
             // 设置定时器，检查微信的健康状态
@@ -351,7 +351,7 @@ void CMain::Inject2WeChat()
     else
     {
         ShowTaskInfo(_T("微信助手被重复初始化"));
-        showLog(_T("微信助手被重复初始化"));
+        ShowLog(_T("微信助手被重复初始化"));
         string logContent = "微信助手被重复初始化";
         WriteLog(logContent.c_str());
     }
@@ -477,7 +477,7 @@ void CMain::OnSumFriendRequest()
     if (isLoginWechat) {
         string logResult = "当前微信号今天收到" + std::to_string(friendRequestCounter) + "个好友请求";
         CString csLog = CString(logResult.c_str());
-        showLog(csLog);
+        ShowLog(csLog);
         string logContent = "点击加粉统计菜单：" + logResult;
         WriteLog(logContent.c_str());
     }
@@ -528,7 +528,7 @@ void CMain::OnWxLogout()
             + UrlEncode(unicode_to_utf8(userInfo.nickname));
         HttpRequest("fans_user_status", postParam);
 
-        showLog(_T("微信下线，微信助手已上报登录状态"));
+        ShowLog(_T("微信下线，微信助手已上报登录状态"));
         logContent = "微信下线，微信助手已上报登录状态";
         WriteLog(logContent.c_str());
     }
@@ -600,7 +600,7 @@ void CMain::OnTimer(UINT nIDEvent)
     CWnd* pWnd = CWnd::FindWindow(NULL, L"WeChatTools");
     if (pWnd == NULL)
     {
-        showLog(_T("无法与微信建立联系，请使用菜单（操作--启动微信）重新登录微信"));
+        ShowLog(_T("无法与微信建立联系，请使用菜单（操作--启动微信）重新登录微信"));
         ShowTaskInfo(_T("无法与微信建立联系，请使用菜单（操作--启动微信）重新登录微信"));
         string logContent = "无法与微信建立联系，请使用菜单（操作--启动微信）重新登录微信";
         WriteLog(logContent.c_str());
@@ -749,7 +749,7 @@ string CMain::HttpRequest(string uri, string postData)
     if (!status) {
         response = "网络请求失败：" + httpClient.GetErrMsg();
         CString csInfo = CString(response.c_str());
-        showLog(csInfo);
+        ShowLog(csInfo);
         ShowTaskInfo(csInfo);
     }
     else {
@@ -834,7 +834,7 @@ bool CMain::HandleFriendRequest(WPARAM wParam)
         + friendScene + " -- " + friendWxac + " -- " + friendWxid + " -- "
         + friendNickname + " -- " + friendRemark;
     CString csLog = CString(logResult.c_str());
-    showLog(csLog);
+    ShowLog(csLog);
     // 返回
     return true;
 }
