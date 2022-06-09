@@ -2,12 +2,13 @@
 #include "ChatRecord.h"
 #include "CAutoFunction.h"
 #include <stdio.h>
+#include <atlstr.h>
 
 
 // 返回地址（执行完HOOK后跳转回来的地址）
 DWORD RetkReciveMsgAddr = GetWeChatWinBase() + WxReciveMessage + 5;
 
-// 被覆盖的call的地址
+// 被覆盖的call指向的函数入口地址
 DWORD OverReciveMsgCallAddr = GetWeChatWinBase() + WxReciveMessageCall;
 
 

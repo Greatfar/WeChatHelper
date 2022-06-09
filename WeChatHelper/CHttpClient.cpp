@@ -4,7 +4,6 @@
 #include <string>
 
 using std::string;
-using std::wstring;
 
 
 CHttpClient::CHttpClient(void) : isDebug(false)
@@ -56,7 +55,7 @@ static int OnDebug(CURL*, curl_infotype itype, char* pData, size_t size, void*)
  */
 static size_t GetResponseBody(void* buffer, size_t size, size_t nmemb, void* lpVoid)
 {
-    std::string* str = dynamic_cast<std::string*>((std::string*)lpVoid);
+    string* str = dynamic_cast<string*>((string*)lpVoid);
     if (NULL == str || NULL == buffer)
     {
         return -1;
@@ -75,7 +74,7 @@ static size_t GetResponseBody(void* buffer, size_t size, size_t nmemb, void* lpV
  * @param resBody 请求体（不传请求体为GET请求，传请求体为POST）
  * @return 返回是否请求成功
  */
-bool CHttpClient::Request(const std::string& strUrl, std::string& strResponse, const std::string& resBody)
+bool CHttpClient::Request(const string& strUrl, string& strResponse, const string& resBody)
 {
     // 初始化cURL
     CURL* curl = curl_easy_init();
@@ -138,7 +137,7 @@ bool CHttpClient::Request(const std::string& strUrl, std::string& strResponse, c
  * @param pCaPath ca证书路径
  * @return 返回是否请求成功
  */
-bool CHttpClient::caRequest(const std::string& strUrl, std::string& strResponse, const std::string& resBody, const char* pCaPath)
+bool CHttpClient::caRequest(const string& strUrl, string& strResponse, const string& resBody, const char* pCaPath)
 {
     // 初始化cURL
     CURL* curl = curl_easy_init();
@@ -221,7 +220,7 @@ void CHttpClient::SetDebug(bool flag)
  * @brief 获取cURL请求错误提示
  * @return string 错误信息
  */
-std::string CHttpClient::GetErrMsg()
+string CHttpClient::GetErrMsg()
 {
     return this->errorMsg;
 }

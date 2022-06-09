@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include <string>
 
 // CMain 对话框
 
@@ -27,8 +26,8 @@ public:
     bool isInjectWechat = false;        // dll是否已经远程注入微信
     BOOL isLoginWechat = FALSE;         // 是否登录微信
     bool isSendWeChatNotFound = false;  // 微信客户端不正常退出时，是否已发送客服下线
-    std::string baseUrl = "";                // API基础URL
-    int readInfoCounter = 0;             // 获取个人信息的次数
+    std::string baseUrl = "";           // API基础URL
+    int readInfoCounter = 0;            // 获取个人信息的次数
 
     virtual BOOL OnInitDialog();
 

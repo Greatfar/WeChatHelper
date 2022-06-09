@@ -1,3 +1,4 @@
 #pragma once
 
-void GetInformation();
+void GetInformation();    // 获取微信个人信息
+

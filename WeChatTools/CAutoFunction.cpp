@@ -8,6 +8,7 @@
 #include <ctime>
 #include <string>
 
+
 using std::string;
 using std::wstring;
 
@@ -16,7 +17,7 @@ using std::wstring;
 // 函数名称: CreateFileWithCurrentTime
 // 函数说明: 根据当前时间创建文件
 // 作    者: Greatfar
-// 时    间: 2019/9/24
+// 时    间: 2022/06/09
 // 参    数: filedir 文件目录 filepostfix文件后缀 filedata 文件开始地址 filedatalen文件 长度
 // 返 回 值: void 
 //************************************************************
@@ -54,7 +55,7 @@ void CreateFileWithCurrentTime(char* filedir, char* filepostfix, DWORD filedata,
 // 函数名称: CreateDir
 // 函数说明: 创建目录
 // 作    者: Greatfar
-// 时    间: 2019/7/21
+// 时    间: 2022/06/09
 // 参    数: dir 目录
 // 返 回 值: void
 //************************************************************
@@ -86,7 +87,7 @@ void CreateDir(const char *dir)
 // 函数名称: GetXmlContent
 // 函数说明: 获取需要的XML内容
 // 作    者: Greatfar
-// 时    间: 2019/11/15
+// 时    间: 2022/06/09
 // 参    数: fullxmlcontent 完整的XML内容  str1 需要获取的XML内容左边的字符串 str2 需要获取的XML内容右边的字符串
 // 返 回 值: wstring 需要获取的XML内容
 //************************************************************

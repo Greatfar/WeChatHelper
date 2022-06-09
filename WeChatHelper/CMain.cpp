@@ -7,6 +7,7 @@
 #include "CHttpClient.h"
 #include "PublicFunction.h"
 
+
 using std::string;
 using std::wstring;
 
@@ -393,7 +394,7 @@ void CMain::OnOpenRuntimeLog()
     time_t timestamp = time(0);
     char tflag[64];
     strftime(tflag, sizeof(tflag), "%Y%m%d", localtime(&timestamp));
-    std::string stflag = tflag;
+    string stflag = tflag;
     CString logFilePrefix = CString(stflag.c_str());
     currentPath = currentPath + _T("log\\") + logFilePrefix + _T("-runtime.log");
     // 调用记事本打开日志
@@ -418,7 +419,7 @@ void CMain::OnFriendRequestLog()
     time_t timestamp = time(0);
     char tflag[64];
     strftime(tflag, sizeof(tflag), "%Y%m%d", localtime(&timestamp));
-    std::string stflag = tflag;
+    string stflag = tflag;
     CString logFilePrefix = CString(stflag.c_str());
     currentPath = currentPath + _T("log\\") + logFilePrefix + _T("-friend-request.log");
     // 调用记事本打开日志
@@ -467,7 +468,7 @@ void CMain::OnOpenHelper()
 // 函数名称: OnSumFriendRequest
 // 函数说明: 响应加粉统计菜单
 // 作    者: Greatfar
-// 时    间: 2019/03/23
+// 时    间: 2022/06/09
 // 参    数: void
 // 返 回 值: void
 //***********************************************************
@@ -625,7 +626,7 @@ void CMain::OnTimer(UINT nIDEvent)
 // 函数名称: OnSoftTask
 // 函数说明: 软件托盘菜单事件响应函数
 // 作    者: Greatfar
-// 时    间: 2019/03/24
+// 时    间: 2022/06/09
 // 参    数: void
 // 返 回 值: void
 //***********************************************************
@@ -717,7 +718,7 @@ void CMain::ShowTaskInfo(LPCTSTR tips)
 // 参    数: postData 请求体(不传为GET请求，传入非空字符串为POST请求)
 // 返 回 值: string 响应体
 //***********************************************************
-std::string CMain::HttpRequest(string uri, string postData)
+string CMain::HttpRequest(string uri, string postData)
 {
     string url = this->baseUrl + uri;
     // 默认提交的参数
@@ -769,7 +770,7 @@ bool CMain::HandleFriendRequest(WPARAM wParam)
     // 取消息数据
     ChatMessageData* msg = (ChatMessageData*)wParam;
     // 消息内容
-    std::string content = wchar_t_to_string(msg->content);
+    string content = wchar_t_to_string(msg->content);
     // 如果不是好友请求，直接返回
     if (content.find("msg fromusername") == string::npos || content.find("country") == string::npos) {
         return false;

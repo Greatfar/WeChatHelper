@@ -6,6 +6,7 @@
 #include <TlHelp32.h>
 #include <atlstr.h>
 
+
 using std::string;
 using std::wstring;
 
@@ -18,7 +19,7 @@ using std::wstring;
 // 参    数: str 需要转换的字符串
 // 返 回 值: string 转换后的字符串
 //***********************************************************
-std::string unicode_to_utf8(const std::string& str)
+string unicode_to_utf8(const string& str)
 {
     int nwLen = ::MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);
 
@@ -34,7 +35,7 @@ std::string unicode_to_utf8(const std::string& str)
 
     ::WideCharToMultiByte(CP_UTF8, 0, pwBuf, nwLen, pBuf, nLen, NULL, NULL);
 
-    std::string retStr(pBuf);
+    string retStr(pBuf);
 
     delete[]pwBuf;
     delete[]pBuf;
@@ -77,15 +78,15 @@ wstring utf8_to_unicode(const string& utf8_str)
 // 参    数: wchar 需要转换的字符串
 // 返 回 值: string 转换后的字符串
 //***********************************************************
-std::string wchar_t_to_string(wchar_t* wchar)
+string wchar_t_to_string(wchar_t* wchar)
 {
-    std::string szDst;
+    string szDst;
     wchar_t* wText = wchar;
     DWORD dwNum = WideCharToMultiByte(CP_OEMCP, NULL, wText, -1, NULL, 0, NULL, FALSE);  // WideCharToMultiByte的运用
-    char* psText;   // psText为char*的临时数组，作为赋值给std::string的中间变量
+    char* psText;   // psText为char*的临时数组，作为赋值给string的中间变量
     psText = new char[dwNum];
     WideCharToMultiByte(CP_OEMCP, NULL, wText, -1, psText, dwNum, NULL, FALSE);  // WideCharToMultiByte的再次运用
-    szDst = psText;  // std::string赋值
+    szDst = psText;  // string赋值
     delete[]psText;  // psText的清除
     return szDst;
 }
@@ -100,7 +101,7 @@ std::string wchar_t_to_string(wchar_t* wchar)
 // 参    数: str 需要转换的字符串
 // 返 回 值: wchar_t* 转换后的字符串
 //***********************************************************
-wchar_t* string_to_wchar_t(const std::string& str)
+wchar_t* string_to_wchar_t(const string& str)
 {
     wchar_t* m_chatroommmsg = new wchar_t[str.size() * 2];  //
     memset(m_chatroommmsg, 0, str.size() * 2);
@@ -147,7 +148,7 @@ string FormatDateTime(string fmt)
     time_t t = time(0);
     char tflag[64];
     strftime(tflag, sizeof(tflag), fmt.c_str(), localtime(&t));
-    std::string stflag = tflag;
+    string stflag = tflag;
     return stflag;
 }
 
@@ -161,10 +162,10 @@ string FormatDateTime(string fmt)
 // 参    数: content 日志内容 filePath 日志文件名
 // 返 回 值: void
 //***********************************************************
-void WriteLog(const std::string& content, string filePath)
+void WriteLog(const string& content, string filePath)
 {
     setlocale(LC_ALL, "zh_CN.UTF-8");
-    std::string log;
+    string log;
     // 内容格式化 unicode（utf-16）转utf8
     log = unicode_to_utf8(
         FormatDateTime("%Y-%m-%d %H:%M:%S") + "    -    " + content +
@@ -174,7 +175,7 @@ void WriteLog(const std::string& content, string filePath)
     time_t timestamp = time(0);
     char tflag[64];
     strftime(tflag, sizeof(tflag), "./log/%Y%m%d-", localtime(&timestamp));
-    std::string stflag = tflag;
+    string stflag = tflag;
     string path = stflag + filePath;
     // 写入日志
     FILE* fp = fopen(path.c_str(), "ab+");
@@ -227,9 +228,9 @@ unsigned char FromHex(unsigned char x)
 // 参    数: string
 // 返 回 值: string
 //***********************************************************
-std::string UrlEncode(const std::string& str)
+string UrlEncode(const string& str)
 {
-    std::string strTemp = "";
+    string strTemp = "";
     size_t length = str.length();
     for (size_t i = 0; i < length; i++)
     {
@@ -261,9 +262,9 @@ std::string UrlEncode(const std::string& str)
 // 参    数: string
 // 返 回 值: string
 //***********************************************************
-std::string UrlDecode(const std::string& str)
+string UrlDecode(const string& str)
 {
-    std::string strTemp = "";
+    string strTemp = "";
     size_t length = str.length();
     for (size_t i = 0; i < length; i++)
     {
@@ -283,7 +284,7 @@ std::string UrlDecode(const std::string& str)
 
 
 //************************************************************
-// 函数名称: curlRequest
+// 函数名称: CurlRequest
 // 函数说明: 使用cURL发送HTTP请求
 // 作    者: Greatfar
 // 时    间: 2022/06/04
@@ -291,7 +292,7 @@ std::string UrlDecode(const std::string& str)
 // 参    数: postData 请求体(不传为GET请求，传入非空字符串为POST请求)
 // 返 回 值: string 响应体
 //***********************************************************
-std::string curlRequest(string url, string postData)
+string CurlRequest(string url, string postData)
 {
     // 默认提交的参数
     if (postData == "")
@@ -357,7 +358,7 @@ DWORD ProcessNameFindPID(const char* ProcessName)
 
 //************************************************************
 // 函数名称: cstring_to_string
-// 函数说明: 将CString转为std::string
+// 函数说明: 将CString转为string
 // 作    者: Greatfar
 // 时    间: 2022/03/30
 // 参    数: cstr CString
@@ -374,7 +375,7 @@ string cstring_to_string(const CString& cstr)
 
 //************************************************************
 // 函数名称: string_to_cstring
-// 函数说明: 将std::string转为CString
+// 函数说明: 将string转为CString
 // 作    者: Greatfar
 // 时    间: 2022/03/30
 // 参    数: str string
