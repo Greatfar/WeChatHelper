@@ -7,7 +7,7 @@
 
 * 编译环境为 [Visual Studio 2022](https://visualstudio.microsoft.com/zh-hans/downloads/) ， VS2017以上版本也可以，根据打开时的提示升级依赖，或安装对应的 [Windows SDK](https://developer.microsoft.com/zh-cn/windows/downloads/sdk-archive/)  `10.0.19041.0` ，并使用 `Visual Studio Installer` 安装 `适用于 v143 生成工具的 c++ 14.30 (17.0) MFC`
 
-* `微信 for windows 3.6.0.18` 下载链接：[http://file.greatfar.cn/down/HSdyx2rDrL0y](http://file.greatfar.cn/down/HSdyx2rDrL0y)
+* `微信 for windows 3.6.0.18` 下载链接（复制到浏览器打开）：[http://file.greatfar.cn/down/HSdyx2rDrL0y](http://file.greatfar.cn/down/HSdyx2rDrL0y)
 
 * 网络请求基于 [libcurl 7.83.1](https://curl.se/)
 
