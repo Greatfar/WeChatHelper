@@ -7,6 +7,7 @@
 #include "SelfInformation.h"
 #include <stdio.h>
 #include <string>
+#include <atlconv.h>
 
 using std::string;
 using std::wstring;
@@ -21,8 +22,14 @@ using std::wstring;
 //************************************************************
 void InitWindow(HMODULE hModule)
 {
-    string targetVersoin = "3.6.0.18";  // 目标微信版本
-    string wxCurrentVersoin = getWxVersion();  // 当前微信版本
+    // 读取配置中的目标微信版本
+    LPTSTR lpTargetVersion = new wchar_t[20];
+    GetPrivateProfileString(L"base", L"target_wechat_version", L"", lpTargetVersion, 20, L"./config.ini");
+    // 目标微信版本
+    USES_CONVERSION;
+    string targetVersoin = T2A(lpTargetVersion);
+    // 当前微信版本
+    string wxCurrentVersoin = getWxVersion();
 
     // 检查当前微信版本
     if (wxCurrentVersoin == targetVersoin)
@@ -77,8 +84,6 @@ void InitWindow(HMODULE hModule)
         login_msg.lpData = NULL;
         login_msg.cbData = 0;
         SendMessage(hLogin, WM_COPYDATA, (WPARAM)hLogin, (LPARAM)&login_msg);
-        // 退出微信进程
-        ExitProcess(-1);
     }
 
 }

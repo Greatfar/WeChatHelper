@@ -294,16 +294,6 @@ string UrlDecode(const string& str)
 //***********************************************************
 string CurlRequest(string url, string postData)
 {
-    // 默认提交的参数
-    if (postData == "")
-    {
-        string joiner = url.find("?") == string::npos ? "?" : "&";
-        url += joiner + "version=" + (string)APP_VERSION;
-    }
-    else
-    {
-        postData += "&version=" + (string)APP_VERSION;
-    }
     // 发送HTTP请求
     CHttpClient httpClient;
     string response = "";  // 响应体
@@ -422,9 +412,9 @@ void CreatePathIfNotExist(CString path)
 //***********************************************************
 string GetValueFromeConfig(CString path, CString field, CString key, CString defaultValue)
 {
-    CString strName;
-    GetPrivateProfileString(field, key, defaultValue, strName.GetBuffer(MAX_PATH), MAX_PATH, path);
-    strName.ReleaseBuffer();
-    return cstring_to_string(strName);
+    CString cfgVaule;
+    GetPrivateProfileString(field, key, defaultValue, cfgVaule.GetBuffer(MAX_PATH), MAX_PATH, path);
+    cfgVaule.ReleaseBuffer();
+    return cstring_to_string(cfgVaule);
 }
 

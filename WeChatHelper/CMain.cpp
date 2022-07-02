@@ -61,8 +61,8 @@ BOOL CMain::OnInitDialog()
 {
     CDialogEx::OnInitDialog();
 
-    // 获取基础url
-    GetBaseUrl();
+    // 获取配置信息
+    GetConfig();
 
     // 确保日志目录存在
     CreatePathIfNotExist(_T("./log"));
@@ -118,11 +118,11 @@ BOOL CMain::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
         isLoginWechat = TRUE;
         // 保存个人信息
         PersonalInformation* personInfo = (PersonalInformation*)pCopyDataStruct->lpData;
-        userInfo.wxid = wchar_t_to_string(personInfo->wxid);            // 微信ID
-        userInfo.wxcount = wchar_t_to_string(personInfo->wxcount);        // 微信账号
+        userInfo.wxid = wchar_t_to_string(personInfo->wxid);                    // 微信ID
+        userInfo.wxcount = wchar_t_to_string(personInfo->wxcount);              // 微信账号
         if (userInfo.wxcount.length() <= 4) userInfo.wxcount = userInfo.wxid;   // 如果没有微信号就使用微信id
-        userInfo.nickname = wchar_t_to_string(personInfo->nickname);        // 微信昵称
-        userInfo.phonenumber = wchar_t_to_string(personInfo->phonenumber);    // 手机号
+        userInfo.nickname = wchar_t_to_string(personInfo->nickname);            // 微信昵称
+        userInfo.phonenumber = wchar_t_to_string(personInfo->phonenumber);      // 手机号
         
         // 如果获取到的微信id是null，重新获取
         if (userInfo.wxid.length() <= 4)
@@ -159,7 +159,7 @@ BOOL CMain::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
         string postParam = "o_wx_id=" + userInfo.wxid + "&wx_id="
             + userInfo.wxcount + "&status=1&source=pc_wechat&device_number=undefined&wx_ic="
             + UrlEncode(unicode_to_utf8(userInfo.nickname));
-        HttpRequest("fans_user_status", postParam);
+        HttpRequest("counter-status", postParam);
 
         string logResult = "微信上线：" + userInfo.nickname + " -- " + userInfo.wxcount + " -- " + userInfo.wxid;
         CString csLog = CString(logResult.c_str());
@@ -169,7 +169,7 @@ BOOL CMain::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
     else if (pCopyDataStruct->dwData == WM_DesktopShowWindow)
     {
         OnOpenHelper();
-        ShowTaskInfo(_T("微信助手正在后台运行"));
+        // ShowTaskInfo(_T("微信助手正在后台运行"));
         string logContent = "微信助手正在运行，用户双击了桌面图标";
         WriteLog(logContent.c_str());
     }
@@ -178,6 +178,13 @@ BOOL CMain::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
     {
         string logContent = "微信版本不匹配，助手进程退出";
         WriteLog(logContent.c_str());
+        // 终止微信进程
+        DWORD dwPid = ProcessNameFindPID("WeChat.exe");
+        if (dwPid != 0)
+        {
+            HANDLE hProcess = ::OpenProcess(PROCESS_TERMINATE, FALSE, dwPid);
+            ::TerminateProcess(hProcess, 0);
+        }
         // 退出当前进程
         ExitProcess(-1);
     }
@@ -243,16 +250,17 @@ void CMain::ShowLog(CString log)
 
 
 //************************************************************
-// 函数名称: GetBaseUrl
-// 函数说明: 获取基础URL
+// 函数名称: GetConfig
+// 函数说明: 获取配置信息
 // 作    者: Greatfar
 // 时    间: 2022/03/23
 // 参    数: void
 // 返 回 值: void
 //***********************************************************
-void CMain::GetBaseUrl()
+void CMain::GetConfig()
 {
     this->baseUrl = GetValueFromeConfig(_T("./config.ini"), _T("api"), _T("baseurl"), _T(""));
+    this->appVersion = GetValueFromeConfig(_T("./config.ini"), _T("base"), _T("app_version"), _T(""));
 }
 
 
@@ -526,7 +534,7 @@ void CMain::OnWxLogout()
         string postParam = "o_wx_id=" + userInfo.wxid + "&wx_id="
             + userInfo.wxcount + "&status=0&source=pc_wechat&device_number=undefined&wx_ic="
             + UrlEncode(unicode_to_utf8(userInfo.nickname));
-        HttpRequest("fans_user_status", postParam);
+        HttpRequest("counter-status", postParam);
 
         ShowLog(_T("微信下线，微信助手已上报登录状态"));
         logContent = "微信下线，微信助手已上报登录状态";
@@ -579,7 +587,7 @@ void CMain::OnAppExit()
 //***********************************************************
 void CMain::OnClose()
 {
-    ShowTaskInfo(_T("助手已进入后台运行"));
+    // ShowTaskInfo(_T("助手已进入后台运行"));
     ShowWindow(SW_HIDE); // 隐藏主窗口
 }
 
@@ -612,7 +620,7 @@ void CMain::OnTimer(UINT nIDEvent)
             string postParam = "o_wx_id=" + userInfo.wxid + "&wx_id="
                 + userInfo.wxcount + "&status=0&source=pc_wechat&device_number=wechat-client-not-found&wx_ic="
                 + UrlEncode(unicode_to_utf8(userInfo.nickname));
-            HttpRequest("fans_user_status", postParam);
+            HttpRequest("counter-status", postParam);
         }
         // 弹出重新启动微信对话框
         if (!isPopupWeChatNotFound)
@@ -688,7 +696,7 @@ void CMain::RunInBackground()
     notifData.hWnd = this->m_hWnd;                 // 接收托盘消息的窗口句柄
     notifData.uID = IDR_MAINFRAME;                 // 应用程序中定义的托盘图标ID
     notifData.hIcon = LoadIcon(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_MAINFRAME)); // 托盘图标句柄
-    wcscpy(notifData.szTip, _T("微信助手 by Greatfar"));
+    wcscpy(notifData.szTip, _T("微信助手"));
     notifData.uCallbackMessage = WM_SHOWTASK;                  // 自定义消息,接收图标发送的消息
     notifData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;       // 设置属性
     Shell_NotifyIcon(NIM_ADD, &notifData);                     // 向任务栏的状态栏发送添加托盘图标的消息
@@ -735,11 +743,11 @@ string CMain::HttpRequest(string uri, string postData)
     if (postData == "")
     {
         string joiner = url.find("?") == string::npos ? "?" : "&";
-        url += joiner + "version=" + (string)APP_VERSION;
+        url += joiner + "version=" + this->appVersion;
     }
     else
     {
-        postData += "&version=" + (string)APP_VERSION;
+        postData += "&version=" + this->appVersion;
     }
     // 发送HTTP请求
     CHttpClient httpClient;
@@ -809,7 +817,7 @@ bool CMain::HandleFriendRequest(WPARAM wParam)
         + "&big_avatar=" + UrlEncode(bigHeadImgUrl)
         + "&small_avatar=" + UrlEncode(smallHeadImgUrl)
         + "&createtime=" + UrlEncode(FormatDateTime("%Y-%m-%d %H:%M:%S"));
-    HttpRequest("fans_user", postParam);
+    HttpRequest("counter-add", postParam);
     // 转换添加好友的场景值
     if (friendScene == "30") {
         friendScene = "扫二维码添加";

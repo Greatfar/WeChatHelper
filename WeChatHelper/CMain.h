@@ -29,6 +29,7 @@ public:
     bool isPopupWeChatNotFound = false; // 微信客户端不正常退出时，是否已弹出提示
     std::string baseUrl = "";           // API基础URL
     int readInfoCounter = 0;            // 获取个人信息的次数
+    std::string appVersion = "";             // 应用版本号
 
     virtual BOOL OnInitDialog();
 
@@ -50,7 +51,7 @@ public:
     void OnOpenRuntimeLog();
     void OnFriendRequestLog();
     void OnOpenHelper();
-    void GetBaseUrl();
+    void GetConfig();
     void SendGetInformation();
     CString GetCurrentPath();
     std::string HttpRequest(std::string uri, std::string postData = "");

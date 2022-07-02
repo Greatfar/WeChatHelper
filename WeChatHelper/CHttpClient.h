@@ -17,9 +17,9 @@ public:
     long GetResponseCode();       // 获取响应状态码
     
 private:
-    bool isDebug;              // 调试标识
+    bool isDebug;                   // 调试标识
     std::string errorMsg = "";      // cURL请求错误提示
-    long responseCode;         // 响应状态码
+    long responseCode = 0;          // 响应状态码
 };
 
 #endif

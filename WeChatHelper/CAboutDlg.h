@@ -11,6 +11,8 @@ class CAboutDlg : public CDialogEx
 public:
     CAboutDlg(CWnd* pParent = nullptr);   // 标准构造函数
     virtual ~CAboutDlg();
+    virtual BOOL OnInitDialog();
+    void SetVersionTips();
 
 // 对话框数据
 #ifdef AFX_DESIGN_TIME

@@ -2,9 +2,6 @@
 
 #include <string>
 
-// 程序版本号
-#define APP_VERSION "1.6.2.28"
-
 
 // 通用消息结构体
 struct MessageStruct
@@ -43,28 +40,28 @@ struct ChatMessageData
 // 个人信息的结构体
 struct PersonalInformation
 {
-    wchar_t wxid[40];            // 微信ID
-    wchar_t wxcount[40];        // 微信账号
-    wchar_t nickname[50];        // 微信昵称
+    wchar_t wxid[40];              // 微信ID
+    wchar_t wxcount[40];           // 微信账号
+    wchar_t nickname[50];          // 微信昵称
     wchar_t remark[50];            // 备注
-    wchar_t phonenumber[30];    // 手机号
+    wchar_t phonenumber[30];       // 手机号
     wchar_t device[20];            // 登陆设备
     wchar_t nation[20];            // 国籍
-    wchar_t province[20];        // 省份
-    wchar_t city[20];            // 城市
-    wchar_t area[20];            // 地区
-    wchar_t language[10];        // 语言
-    wchar_t bigheader[0x100];    // 大头像
+    wchar_t province[20];          // 省份
+    wchar_t city[20];              // 城市
+    wchar_t area[20];              // 地区
+    wchar_t language[10];          // 语言
+    wchar_t bigheader[0x100];      // 大头像
     wchar_t smallheader[0x100];    // 小头像
-    wchar_t signature[50];        // 个性签名
+    wchar_t signature[50];         // 个性签名
 };
 
 
 // 当前微信登录的用户信息 结构体
 struct UserInfo
 {
-    std::string wxid;            // 微信ID
-    std::string wxcount;        // 微信账号
-    std::string nickname;        // 微信昵称
+    std::string wxid;             // 微信ID
+    std::string wxcount;          // 微信账号
+    std::string nickname;         // 微信昵称
     std::string phonenumber;      // 手机号
 };

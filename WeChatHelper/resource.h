@@ -36,6 +36,10 @@
 #define IDC_RADIO4                      1045
 #define IDC_RADIO5                      1046
 #define IDC_EDIT_LOG                    1049
+#define IDC_ABOUT_VERSION               1050
+#define IDC_TARGET_WECHAT_VERSION       1051
+#define IDC_COPY_RIGHT                  1052
+#define IDC_ABOUT_COPY_RIGHT            1052
 #define ID_32775                        32775
 #define ID_32776                        32776
 #define ID_32777                        32777
@@ -73,7 +77,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        197
 #define _APS_NEXT_COMMAND_VALUE         32830
-#define _APS_NEXT_CONTROL_VALUE         1050
+#define _APS_NEXT_CONTROL_VALUE         1053
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

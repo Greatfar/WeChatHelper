@@ -1,18 +1,18 @@
 ﻿#pragma once
 
 
-#define WxReciveMessage 0x4E9464        // 接收消息call 汇编call指令所在地址 偏移 （HOOK挂钩点）
-#define WxReciveMessageCall 0xC9C90     // 被HOOK覆盖的汇编call指令 所指向的call（函数）地址的偏移
+#define WxReciveMessage 0x4E9464           // 接收消息call 汇编call指令所在地址 偏移 （HOOK挂钩点）
+#define WxReciveMessageCall 0xC9C90        // 被HOOK覆盖的汇编call指令 所指向的call（函数）地址的偏移
 // 聊天消息 偏移
-#define MsgTypeOffset 0x30                // 消息类型的偏移 
+#define MsgTypeOffset 0x30                 // 消息类型的偏移 
 #define WxidOffset 0x48                    // 微信ID/群ID偏移 
-#define MsgContentOffset 0x70            // 消息内容的偏移 
-#define MsgSourceOffset 0x1AC            // 消息来源的偏移 
-#define GroupMsgSenderOffset 0x170        // 群消息发送者偏移
+#define MsgContentOffset 0x70              // 消息内容的偏移 
+#define MsgSourceOffset 0x1AC              // 消息来源的偏移 
+#define GroupMsgSenderOffset 0x170         // 群消息发送者偏移
 
 
-#define LoginSign_Offset 0x222EFF8      // 微信登陆状态标识
-#define WxLogout 0x60F840               // 退出微信call
+#define LoginSign_Offset 0x222EFF8         // 微信登陆状态标识
+#define WxLogout 0x60F840                  // 退出微信call
 
 
 // 个人信息 基址 

@@ -12,7 +12,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
         {
             // 启动线程来初始化界面
             HANDLE hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)InitWindow, hModule, 0, NULL);
-            CloseHandle(hThread);
+            hThread != 0 && CloseHandle(hThread);
         }
             break;
         case DLL_THREAD_ATTACH:
