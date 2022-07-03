@@ -2,7 +2,7 @@
 
 * 微信助手（微信加粉计数器），把客服加好友信息传到服务器，用于统计加粉数量，对客服微信进行监管（防止客服跳单）
 
-* 当前适配 [微信 for windows 3.2.1.154](https://pc.weixin.qq.com/)
+* 当前适配 [微信 for windows 3.6.0.18](https://pc.weixin.qq.com/)
 
 ## 项目简介
 
