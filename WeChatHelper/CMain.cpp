@@ -73,6 +73,9 @@ BOOL CMain::OnInitDialog()
     // 添加系统托盘图标
     RunInBackground();
 
+    // 检查更新
+    CheckAppUpdate();
+
     return TRUE;  // return TRUE unless you set the focus to a control
 }
 
@@ -149,7 +152,7 @@ BOOL CMain::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
                     ::TerminateProcess(hProcess, 0);
                 }
                 // 重启助手(调用CMD杀进程后启动)
-                string cmd = "taskkill /f /im WeChatHelper.exe & start " + cstring_to_string(this->GetCurrentPath()) + "WeChatHelper.exe";
+                string cmd = "taskkill /f /im WeChatHelper.exe & start " + cstring_to_string(GetCurrentPath()) + "WeChatHelper.exe";
                 system(cmd.c_str());
             }
             return CDialogEx::OnCopyData(pWnd, pCopyDataStruct);
@@ -190,6 +193,22 @@ BOOL CMain::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
     }
 
     return CDialogEx::OnCopyData(pWnd, pCopyDataStruct);
+}
+
+
+
+//************************************************************
+// 函数名称: CheckAppUpdate
+// 函数说明: 检查更新
+// 作    者: Greatfar
+// 时    间: 2022/03/22
+// 参    数: void
+// 返 回 值: void
+//***********************************************************
+void CMain::CheckAppUpdate()
+{
+    // 创建线程 检查应用更新
+    AfxBeginThread(AppUpdateThread, (LPVOID)this);
 }
 
 
@@ -437,26 +456,6 @@ void CMain::OnFriendRequestLog()
 
 
 //************************************************************
-// 函数名称: GetCurrentPath
-// 函数说明: 获取当前程序运行目录
-// 作    者: Greatfar
-// 时    间: 2022/02/23
-// 参    数: void
-// 返 回 值: void
-//***********************************************************
-CString CMain::GetCurrentPath()
-{
-    CString  strProgramPath;
-    GetModuleFileName(NULL, strProgramPath.GetBuffer(MAX_PATH), MAX_PATH);
-    strProgramPath.ReleaseBuffer(MAX_PATH);
-    int nPathPos = strProgramPath.ReverseFind('\\');
-    strProgramPath = strProgramPath.Left(nPathPos + 1);
-    return strProgramPath;
-}
-
-
-
-//************************************************************
 // 函数名称: OnOpenHelper
 // 函数说明: 响应托盘图标：打开助手
 // 作    者: Greatfar
@@ -558,7 +557,7 @@ void CMain::OnWxLogout()
 //***********************************************************
 void CMain::OnAppExit()
 {
-    if (MessageBoxA(NULL, "您要退出微信助手吗？退出后停止统计微信加粉数量", "tips", MB_YESNO) == IDYES)
+    if (MessageBoxA(NULL, "您要退出微信助手吗？退出后停止统计微信加粉数量", "tips", MB_SYSTEMMODAL | MB_YESNO) == IDYES)
     {
         // 退出微信
         OnWxLogout();
@@ -754,20 +753,24 @@ string CMain::HttpRequest(string uri, string postData)
     string response = "";  // 响应体
     bool status = httpClient.Request(url, response, postData);
     // 请求失败
-    if (!status) {
+    if (!status)
+    {
         response = "网络请求失败：" + httpClient.GetErrMsg();
         CString csInfo = CString(response.c_str());
         ShowLog(csInfo);
         ShowTaskInfo(csInfo);
     }
-    else {
+    else
+    {
         // 转码解决中文乱码问题 （本项目为Unicode工程（utf-16），网络请求返回的是utf-8编码）
         wstring respondW = utf8_to_unicode(response);
         // 转换成string
         response = wchar_t_to_string((wchar_t*)respondW.c_str());
     }
     // 记录日志
-    string logContent = "发送网络请求：\r\n请求地址： " + url + "\r\n请求参数： " + postData + "\r\n请求结果： " + response;
+    string logContent = "发送网络请求：\r\n请求地址： " + url;
+    if (postData != "") logContent += "\r\n请求参数： " + postData;
+    logContent += "\r\n请求结果： " + response;
     WriteLog(logContent.c_str());
     // 返回数据
     return response;

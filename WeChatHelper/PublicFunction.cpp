@@ -5,10 +5,14 @@
 #include "CHttpClient.h"
 #include <TlHelp32.h>
 #include <atlstr.h>
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
 
 
 using std::string;
 using std::wstring;
+using namespace rapidjson;  // 使用 rapidjson 的命名空间
 
 
 //************************************************************
@@ -299,17 +303,21 @@ string CurlRequest(string url, string postData)
     string response = "";  // 响应体
     bool status = httpClient.Request(url, response, postData);
     // 请求失败
-    if (!status) {
+    if (!status)
+    {
         response = "网络请求失败：" + httpClient.GetErrMsg();
     }
-    else {
+    else
+    {
         // 转码解决中文乱码问题 （本项目为Unicode工程（utf-16），网络请求返回的是utf-8编码）
         wstring respondW = utf8_to_unicode(response);
         // wchar_t* 转换成 string
         response = wchar_t_to_string((wchar_t*)respondW.c_str());
     }
     // 记录日志
-    string logContent = "发送网络请求：\r\n请求地址： " + url + "\r\n请求参数： " + postData + "\r\n请求结果： " + response;
+    string logContent = "发送网络请求：\r\n请求地址： " + url;
+    if (postData != "") logContent += "\r\n请求参数： " + postData;
+    logContent += "\r\n请求结果： " + response;
     WriteLog(logContent.c_str());
     // 返回数据
     return response;
@@ -417,4 +425,115 @@ string GetValueFromeConfig(CString path, CString field, CString key, CString def
     cfgVaule.ReleaseBuffer();
     return cstring_to_string(cfgVaule);
 }
+
+
+
+//************************************************************
+// 函数名称: AppUpdateThread
+// 函数说明: 应用更新（线程函数）
+// 作    者: Greatfar
+// 时    间: 2022/07/03
+// 参    数: LPVOID
+// 返 回 值: UINT
+//***********************************************************
+UINT AppUpdateThread(LPVOID lParam)
+{
+    // 请求检查更新接口
+    string updateApi = GetValueFromeConfig(_T("./config.ini"), _T("api"), _T("update"), _T(""));
+    string appVersion = GetValueFromeConfig(_T("./config.ini"), _T("base"), _T("app_version"), _T(""));
+    string updateResponse = CurlRequest(updateApi + "?version=" + appVersion);
+    // 如果响应数据不是json
+    if (updateResponse.find("code") == string::npos) {
+        return 0;
+    }
+    // 使用 rapidjson 解析 json 数据
+    Document document;
+    document.Parse(updateResponse.c_str());
+    // 判断接口状态
+    if (document.HasMember("code") && document["code"].IsInt())
+    {
+        int resCode = document["code"].GetInt();
+        // 接口错误
+        if (resCode != 200)
+        {
+            return 0;
+        }
+    }
+    // 获取更新状态
+    if (document.HasMember("data") && document["data"].IsObject())
+    {
+        // 读取更新标识
+        bool isUpdate = false;
+        if (document["data"].HasMember("is_update") && document["data"]["is_update"].IsBool())
+        {
+            isUpdate = document["data"]["is_update"].GetBool();
+        }
+        // 如果无需更新
+        if (!isUpdate) return 0;
+        // 读取更新链接
+        Value::MemberIterator link = document["data"].FindMember("down_link");
+        string downLink = link->value.GetString();
+        // 读取版本号
+        Value::MemberIterator downAppVersionValue = document["data"].FindMember("app_version");
+        string downAppVersion = downAppVersionValue->value.GetString();
+        string lastDownVersion = GetValueFromeConfig(_T("./config.ini"), _T("update"), _T("last_download"), _T(""));
+        // 如果上次成功下载的版本与当前要下载的版本不一致 或 update.exe 不存在  减少重复下载，节省带宽
+        if (downAppVersion != lastDownVersion || !FileExist(L"update.exe"))
+        {
+            // 下载更新包
+            CHttpClient httpClient;
+            httpClient.downloadFile(downLink.c_str(), "update.exe");
+        }
+        // 保存当前已下载版本号到配置文件
+        WritePrivateProfileString(_T("update"), _T("last_download"), (LPCWSTR)string_to_wchar_t(downAppVersion), _T("./config.ini"));
+        // 提示安装更新
+        if (MessageBoxA(NULL, "发现新版本的微信助手，是否立即升级？", "软件升级", MB_SYSTEMMODAL | MB_YESNO) == IDYES)
+        {
+            // 调用CMD执行更新
+            string cmd = "taskkill /f /im WeChat.exe & taskkill /f /im WeChatHelper.exe & start " + cstring_to_string(GetCurrentPath()) + "update.exe";
+            system(cmd.c_str());
+        }
+    }
+    // 线程函数必须返回一个INT值
+    return 0;
+}
+
+
+
+//************************************************************
+// 函数名称: GetCurrentPath
+// 函数说明: 获取当前程序运行目录
+// 作    者: Greatfar
+// 时    间: 2022/02/23
+// 参    数: void
+// 返 回 值: CString
+//***********************************************************
+CString GetCurrentPath()
+{
+    CString  strProgramPath;
+    GetModuleFileName(NULL, strProgramPath.GetBuffer(MAX_PATH), MAX_PATH);
+    strProgramPath.ReleaseBuffer(MAX_PATH);
+    int nPathPos = strProgramPath.ReverseFind('\\');
+    strProgramPath = strProgramPath.Left(nPathPos + 1);
+    return strProgramPath;
+}
+
+
+
+//************************************************************
+// 函数名称: FileExist
+// 函数说明: 检查指定的文件是否存在（文件存在则返回 TRUE, 不存在则返回 FALSE）
+// 作    者: Greatfar
+// 时    间: 2022/02/23
+// 参    数: lpszFile 文件的绝对路径, 例: C:\\a.txt
+// 返 回 值: BOOL
+//***********************************************************
+BOOL FileExist(LPCTSTR lpszFile)
+{
+    HANDLE hFile = CreateFile(lpszFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    CloseHandle(hFile);
+    return hFile != INVALID_HANDLE_VALUE;
+}
+
+
 

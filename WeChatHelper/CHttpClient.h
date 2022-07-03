@@ -10,6 +10,7 @@ public:
 public:
     bool Request(const std::string& strUrl, std::string& strResponse, const std::string& resBody = "");  // 发送请求
     bool caRequest(const std::string& strUrl, std::string& strResponse, const std::string& resBody = "", const char* pCaPath = NULL);  // 发送请求（带ca证书校验）
+    int downloadFile(const char* url, const char outfilename[FILENAME_MAX]); // 下载文件
 
 public:
     void SetDebug(bool flag);     // 设置调试开关

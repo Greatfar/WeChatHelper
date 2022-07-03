@@ -17,4 +17,7 @@ std::string cstring_to_string(const CString& cstr);                             
 CString string_to_cstring(const std::string& str);                                                         // 将 string 转为 CString
 void CreatePathIfNotExist(CString path);                                                                   // 检查日志目录是否存在，不存在则创建
 std::string GetValueFromeConfig(CString path, CString field, CString key, CString defaultValue = _T(""));  // 从配置文件取值
+UINT AppUpdateThread(LPVOID lParam);                                                                       // 应用更新（线程函数）
+CString GetCurrentPath();                                                                                  // 获取程序运行目录
+BOOL FileExist(LPCTSTR lpszFile);                                                                          // 文件是否存在
 

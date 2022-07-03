@@ -67,6 +67,82 @@ static size_t GetResponseBody(void* buffer, size_t size, size_t nmemb, void* lpV
 }
 
 
+
+/**
+ * @brief 响应数据写入文件
+ * @return size_t
+ */
+size_t write_data(void* ptr, size_t size, size_t nmemb, FILE* stream) {
+    size_t written = fwrite(ptr, size, nmemb, stream);
+    return written;
+}
+
+
+
+/**
+ * @brief 下载文件
+ * @param strUrl 下载地址
+ * @param outfilename 文件名
+ * @return int
+ */
+int CHttpClient::downloadFile(const char* url, const char outfilename[FILENAME_MAX]) {
+    CURL* curl;
+    FILE* fp;
+    CURLcode res;
+    // 调用curl_global_init()初始化libcurl
+    res = curl_global_init(CURL_GLOBAL_ALL);
+    if (CURLE_OK != res)
+    {
+        printf("init libcurl failed.");
+        curl_global_cleanup();
+        return -1;
+    }
+    // 调用curl_easy_init()函数得到 easy interface型指针
+    curl = curl_easy_init();
+    if (curl) {
+        // 打开文件 写入模式 wb如果文件存在就删除后创建
+        fopen_s(&fp, outfilename, "wb");
+        // 调用curl_easy_setopt() 设置传输选项
+        res = curl_easy_setopt(curl, CURLOPT_URL, url);
+        if (res != CURLE_OK)
+        {
+            fp != 0 && fclose(fp);
+            curl_easy_cleanup(curl);
+            return -1;
+        }
+        // 根据curl_easy_setopt()设置的传输选项，实现回调函数以完成用户特定任务
+        res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+        if (res != CURLE_OK)
+        {
+            fp != 0 && fclose(fp);
+            curl_easy_cleanup(curl);
+            return -1;
+        }
+        // 根据curl_easy_setopt()设置的传输选项，实现回调函数以完成用户特定任务
+        res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+        if (res != CURLE_OK)
+        {
+            fp != 0 && fclose(fp);
+            curl_easy_cleanup(curl);
+            return -1;
+        }// 调用curl_easy_perform()函数完成传输任务
+        res = curl_easy_perform(curl);
+        fp != 0 && fclose(fp);
+        // Check for errors
+        if (res != CURLE_OK) {
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+            curl_easy_cleanup(curl);
+            return -1;
+        }
+        // always cleanup
+        curl_easy_cleanup(curl);  // 调用curl_easy_cleanup()释放内存
+    }
+    curl_global_cleanup();
+    return 0;
+}
+
+
+
 /**
  * @brief 发送请求
  * @param strUrl 请求的url
