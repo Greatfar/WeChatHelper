@@ -10,8 +10,6 @@
 
 * WeChatHelper.exe 为 [MFC 桌面应用程序](https://docs.microsoft.com/zh-cn/cpp/mfc/mfc-desktop-applications?view=msvc-170) , 需要在安装 `visual studio` 时，勾选MFC（可选安装项），或者在安装VS后，使用 `Visual Studio Installer` 安装 `适用于 v143 生成工具的 c++ 14.30 (17.0) MFC`
 
-* `微信 for windows 3.6.0.18` 下载链接（复制到浏览器打开）：[http://file.greatfar.cn/down/HSdyx2rDrL0y](http://file.greatfar.cn/down/HSdyx2rDrL0y)
-
 * 网络请求基于 [libcurl 7.83.1](https://curl.se/)
 
 * JSON解析基于 [Tencent/rapidjson](https://github.com/Tencent/rapidjson/)
